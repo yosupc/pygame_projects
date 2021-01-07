@@ -13,7 +13,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 # creating character's size
 character_width = 70
 character_height = 70
-x_pos = screen_width/2 - screen_width/2
+x_pos = int(screen_width/2) - int(character_width/2)
 y_pos = screen_height - character_height
 
 running = True
@@ -33,7 +33,16 @@ while running:
         y_pos -= 5
     if pressed[pygame.K_DOWN]:
         y_pos += 5
-    
+
+    # move boundaries
+    if x_pos <= 0:
+        x_pos = 0
+    elif x_pos >= screen_width - character_width:
+        x_pos = screen_width - character_width
+    if y_pos <= 0:
+        y_pos = 0
+    elif y_pos >= screen_height - character_height:
+        y_pos = screen_height - character_height
 
     screen.fill ((100, 255, 100))
     pygame.draw.rect(screen, (255, 100, 100),(x_pos, y_pos, character_width, character_height))
