@@ -21,7 +21,8 @@ y_pos = screen_height - character_height
 reward_width = 50
 reward_height = 50
 reward_x = random.randint(0, screen_width - reward_width)
-reward_y = -reward_height
+fixed_reward_height = reward_height
+reward_y = - fixed_reward_height
 
 running = True
 while running:
@@ -54,7 +55,14 @@ while running:
     screen.fill ((100, 255, 100))
     pygame.draw.rect(screen, (255, 100, 100),(x_pos, y_pos, character_width, character_height))
     pygame.draw.rect(screen, (0, 100, 100),(reward_x, reward_y, reward_width, reward_height))
-    reward_y += 5
+    
+    
+    if reward_y == screen_height:
+        reward_x = random.randint(0, screen_width - reward_width)
+        reward_y = - fixed_reward_height
+    else:
+        reward_y += 5
+        
     pygame.display.update()
 
 
