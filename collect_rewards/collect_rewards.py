@@ -20,17 +20,28 @@ y_pos = screen_height - basket_height
 # creating basket2 (upper part)
 basket_top_width = 70
 basket_top_height = 15
-top_x = x_pos
-top_y = y_pos
 
-# creating reward
-reward_width = 50
-reward_height = 50
-reward_x = random.randint(0, screen_width - reward_width)
-fixed_reward_height = reward_height
-reward_y = - fixed_reward_height
+class Reward:
+    def __init__(self, name, width, height):
+        self.name = name
+        self.width = width
+        self.height = height
+        self.x_pos = random.randint (0, screen_width - self.width)
+        self.y_pos = random.randint(-(self.height*30), -self.height)
+    
+    def move (self):
+        self.y_pos += 5
+    
+    def update (self):
+        self.x_pos = random.randint (0, screen_width - self.width)
+        self.y_pos = random.randint(-(self.height*30), -self.height)
+
+reward = Reward("Reward", 30, 30)
+reward2 = Reward("Reward2", 40, 40)
+reward3 = Reward("Reward3", 50, 50)
 
 score = 0
+
 running = True
 while running:
     framesPS = clock.tick(60)
@@ -44,45 +55,34 @@ while running:
         x_pos -= 5
     if pressed[pygame.K_RIGHT]:
         x_pos += 5
-    if pressed[pygame.K_UP]:
-        y_pos -= 5
-    if pressed[pygame.K_DOWN]:
-        y_pos += 5
 
     # move boundaries
     if x_pos <= 0:
         x_pos = 0
     elif x_pos >= screen_width - basket_width:
         x_pos = screen_width - basket_width
-    if y_pos <= 0:
-        y_pos = 0
-    elif y_pos >= screen_height - basket_height:
-        y_pos = screen_height - basket_height
+
+
 
     screen.fill ((100, 255, 100))
-    pygame.draw.rect(screen, (210,115,30),(x_pos, y_pos, basket_width, basket_height))
-    pygame.draw.rect(screen, (100,100,100),(x_pos, y_pos, basket_top_width, basket_top_height))    
-    pygame.draw.rect(screen, (255, 255, 0),(reward_x, reward_y, reward_width, reward_height))
+    pygame.draw.rect(screen, (210,105,30),(x_pos, y_pos, basket_width, basket_height))
+    pygame.draw.rect(screen, (100,100,100),(x_pos, y_pos, basket_top_width, basket_top_height)) 
     
-    
-    if reward_y == screen_height:
-        reward_x = random.randint(0, screen_width - reward_width)
-        reward_y = - fixed_reward_height
-    else:
-        reward_y += 5
+    pygame.draw.rect(screen, (255, 255, 0),(reward.x_pos , reward.y_pos, reward.width, reward.height))
+    pygame.draw.rect(screen, (255, 255, 0),(reward2.x_pos , reward2.y_pos, reward2.width, reward2.height))
+    pygame.draw.rect(screen, (255, 255, 0),(reward3.x_pos , reward3.y_pos, reward3.width, reward3.height))
 
-    # reward collision
-    if reward_y == y_pos:
-        tmp = reward_x
-        basket_range_x = x_pos + basket_width
-        for i in range (reward_width):
-            if x_pos <= tmp & tmp <= basket_range_x:
-                score += 10
-                reward_x = random.randint(0, screen_width - reward_width)
-                reward_y = - fixed_reward_height
-                print("score: ", score)
-                break
-            tmp += 1
+    reward.move()
+    reward2.move()
+    reward3.move()
+
+    #print(reward.y_pos)
+    if reward.y_pos >= screen_height:
+        reward.update()
+    if reward2.y_pos >= screen_height:
+        reward2.update()
+    if reward3.y_pos >= screen_height:
+        reward3.update()
         
     pygame.display.update()
 
