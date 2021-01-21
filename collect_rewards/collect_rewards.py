@@ -38,7 +38,7 @@ class Reward:
         self.width = width
         self.height = height
         self.x_pos = random.randint (0, screen_width - self.width)
-        self.y_pos = random.randint(-(self.height*30), -self.height)
+        self.y_pos = random.randint(-(self.height), -self.height)
     
     def move (self):
         self.y_pos += 5
@@ -51,8 +51,25 @@ reward = Reward("Reward", 30, 30)
 reward2 = Reward("Reward2", 40, 40)
 reward3 = Reward("Reward3", 50, 50)
 
-score = 0
+def myCollision (basket_c, reward_c, score_check):
+    tmp = reward_c.x_pos
+    tmp2 = basket_c.x_pos
+    basket_end = basket_c.x_pos + basket_c.width
 
+    for i in range (reward_c.width):
+        for j in range (basket_c.width):
+            if tmp == tmp2:
+                score_check += 10
+                return True
+            tmp2 += 1
+        tmp += 1
+        tmp2 = basket_c.x_pos
+    return False
+
+check_once = 0
+score = 0
+print("score is" , score)
+collision_line = screen_height - basket_height
 running = True
 while running:
     framesPS = clock.tick(60)
@@ -87,14 +104,32 @@ while running:
     reward2.move()
     reward3.move()
 
-    #print(reward.y_pos)
     if reward.y_pos >= screen_height:
         reward.update()
+        check_once = 0
     if reward2.y_pos >= screen_height:
         reward2.update()
+        check_once = 0
     if reward3.y_pos >= screen_height:
         reward3.update()
+        check_once = 0
         
+    if reward.y_pos + reward.height >= collision_line:
+        if check_once == 0 and myCollision(basket, reward, score):
+            score += 10
+            print("score is" , score)
+        check_once += 1
+    if reward2.y_pos + reward2.height >= collision_line:
+        if check_once == 0 and myCollision(basket, reward2, score):
+            score += 10
+            print("score is" , score)
+        check_once += 1
+    if reward3.y_pos + reward3.height >= collision_line:
+        if check_once == 0 and myCollision(basket, reward3, score):
+            score += 10
+            print("score is" , score)
+        check_once += 1
+
     pygame.display.update()
 
 
