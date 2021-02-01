@@ -66,6 +66,12 @@ def myCollision (basket_c, reward_c, score_check):
         tmp2 = basket_c.x_pos
     return False
 
+
+font = pygame.font.SysFont(None, 50)
+img = font.render ("PRESS SPACE TO START", True, (0,0,0))
+on_off = False
+
+
 check_once = 0
 score = 0
 print("score is" , score)
@@ -77,58 +83,67 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # a basket move by keyboard arrows
     pressed = pygame.key.get_pressed()
-    if pressed[pygame.K_LEFT]:
-        basket.x_pos -= 5
-    if pressed[pygame.K_RIGHT]:
-        basket.x_pos += 5
 
-    # move boundaries
-    if basket.x_pos <= 0:
-        basket.x_pos = 0
-    elif basket.x_pos >= screen_width - basket.width:
-        basket.x_pos = screen_width - basket.width
+    if pressed[pygame.K_SPACE]:
+        on_off = True
+
+    elif on_off:
+        # a basket move by keyboard arrows
+        if pressed[pygame.K_LEFT]:
+            basket.x_pos -= 5
+        if pressed[pygame.K_RIGHT]:
+            basket.x_pos += 5
+
+        # move boundaries
+        if basket.x_pos <= 0:
+            basket.x_pos = 0
+        elif basket.x_pos >= screen_width - basket.width:
+            basket.x_pos = screen_width - basket.width
 
 
 
-    screen.fill ((100, 255, 100))
-    pygame.draw.rect(screen, (210,105,30),(basket.x_pos, basket.y_pos, basket.width, basket.height))
-    pygame.draw.rect(screen, (100,100,100),(basket.x_pos, basket.y_pos, basket_top_width, basket_top_height)) 
-    
-    pygame.draw.rect(screen, (255, 255, 0),(reward.x_pos , reward.y_pos, reward.width, reward.height))
-    pygame.draw.rect(screen, (255, 255, 0),(reward2.x_pos , reward2.y_pos, reward2.width, reward2.height))
-    pygame.draw.rect(screen, (255, 255, 0),(reward3.x_pos , reward3.y_pos, reward3.width, reward3.height))
-
-    reward.move()
-    reward2.move()
-    reward3.move()
-
-    if reward.y_pos >= screen_height:
-        reward.update()
-        check_once = 0
-    if reward2.y_pos >= screen_height:
-        reward2.update()
-        check_once = 0
-    if reward3.y_pos >= screen_height:
-        reward3.update()
-        check_once = 0
+        screen.fill ((100, 255, 100))
+        pygame.draw.rect(screen, (210,105,30),(basket.x_pos, basket.y_pos, basket.width, basket.height))
+        pygame.draw.rect(screen, (100,100,100),(basket.x_pos, basket.y_pos, basket_top_width, basket_top_height)) 
         
-    if reward.y_pos + reward.height >= collision_line:
-        if check_once == 0 and myCollision(basket, reward, score):
-            score += 10
-            print("score is" , score)
-        check_once += 1
-    if reward2.y_pos + reward2.height >= collision_line:
-        if check_once == 0 and myCollision(basket, reward2, score):
-            score += 10
-            print("score is" , score)
-        check_once += 1
-    if reward3.y_pos + reward3.height >= collision_line:
-        if check_once == 0 and myCollision(basket, reward3, score):
-            score += 10
-            print("score is" , score)
-        check_once += 1
+        pygame.draw.rect(screen, (255, 255, 0),(reward.x_pos , reward.y_pos, reward.width, reward.height))
+        pygame.draw.rect(screen, (255, 255, 0),(reward2.x_pos , reward2.y_pos, reward2.width, reward2.height))
+        pygame.draw.rect(screen, (255, 255, 0),(reward3.x_pos , reward3.y_pos, reward3.width, reward3.height))
+
+        reward.move()
+        reward2.move()
+        reward3.move()
+
+        if reward.y_pos >= screen_height:
+            reward.update()
+            check_once = 0
+        if reward2.y_pos >= screen_height:
+            reward2.update()
+            check_once = 0
+        if reward3.y_pos >= screen_height:
+            reward3.update()
+            check_once = 0
+            
+        if reward.y_pos + reward.height >= collision_line:
+            if check_once == 0 and myCollision(basket, reward, score):
+                score += 10
+                print("score is" , score)
+            check_once += 1
+        if reward2.y_pos + reward2.height >= collision_line:
+            if check_once == 0 and myCollision(basket, reward2, score):
+                score += 10
+                print("score is" , score)
+            check_once += 1
+        if reward3.y_pos + reward3.height >= collision_line:
+            if check_once == 0 and myCollision(basket, reward3, score):
+                score += 10
+                print("score is" , score)
+            check_once += 1
+
+    else:
+        screen.fill((100,255,100))
+        screen.blit(img, (115, 250))
 
     pygame.display.update()
 
