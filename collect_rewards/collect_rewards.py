@@ -71,10 +71,10 @@ font = pygame.font.SysFont(None, 50)
 img = font.render ("PRESS SPACE TO START", True, (0,0,0))
 on_off = False
 
+start = pygame.time.get_ticks() 
 
 check_once = 0
 score = 0
-print("score is" , score)
 collision_line = screen_height - basket_height
 running = True
 while running:
@@ -117,35 +117,60 @@ while running:
 
         if reward.y_pos >= screen_height:
             reward.update()
-            check_once = 0
+            #check_once = 0
         if reward2.y_pos >= screen_height:
             reward2.update()
-            check_once = 0
         if reward3.y_pos >= screen_height:
             reward3.update()
-            check_once = 0
             
         if reward.y_pos + reward.height >= collision_line:
-            if check_once == 0 and myCollision(basket, reward, score):
+            #if check_once == 0 and myCollision(basket, reward, score):
+            if myCollision(basket, reward, score):
                 score += 10
-                print("score is" , score)
-            check_once += 1
+                reward.update()
+                #check_once = 0
+                #print("score is" , score)
+            #check_once += 1
         if reward2.y_pos + reward2.height >= collision_line:
-            if check_once == 0 and myCollision(basket, reward2, score):
+            if myCollision(basket, reward2, score):
                 score += 10
-                print("score is" , score)
-            check_once += 1
+                reward2.update()
         if reward3.y_pos + reward3.height >= collision_line:
-            if check_once == 0 and myCollision(basket, reward3, score):
+            if myCollision(basket, reward3, score):
                 score += 10
-                print("score is" , score)
-            check_once += 1
+                reward3.update()
 
-    else:
+        score_board = pygame.font.SysFont(None, 50)
+        score_display = score_board.render ("Score: {}".format(score), True, (0,0,0))
+        screen.blit(score_display, (screen_width - 200, 20))
+
+        elapsed = (pygame.time.get_ticks() - start) /1000 #since milliseconds
+        timer_font = pygame.font.SysFont(None, 50)
+        elapsed = 31 - int(elapsed)
+        timer_display = timer_font.render ("Time: {}".format(elapsed), True, (0,0,0))
+        screen.blit(timer_display, (20, 20))
+
+        if elapsed <= 0:
+            check_once  = 1
+            on_off = False
+
+    elif on_off == False and check_once == 0:
         screen.fill((100,255,100))
         screen.blit(img, (115, 250))
 
+    else:
+        game_over = font.render ("Game Over! Your Score: {}".format(score), True, (0,0,0))
+        game_over2 = font.render ("ESC to Exit", True, (0,0,0))
+
+        screen.fill((100,255,100))
+        screen.blit(game_over, (100, 130))
+        screen.blit(game_over2, (220, 180))
+
+        if pressed[pygame.K_ESCAPE]:
+            running = False
+
     pygame.display.update()
+
 
 
 pygame.quit()
